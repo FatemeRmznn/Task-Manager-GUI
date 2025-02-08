@@ -5,15 +5,15 @@ from tkcalendar import DateEntry
 import json
 import os
 
-# 📁 نام فایل ذخیره‌سازی
+# Save file name
 TASKS_FILE = "tasks.json"
 
-# 📝 لیست سراسری برای ذخیره‌ی تسک‌ها
+# Global list for saving tasks
 tasks = []
 
 
 def load_tasks():
-    """بارگذاری تسک‌ها از فایل JSON (در صورت وجود)"""
+    # Load tasks from JSON file (if available)
     global tasks
     if os.path.exists(TASKS_FILE):
         with open(TASKS_FILE, "r", encoding="utf-8") as file:
@@ -24,13 +24,13 @@ def load_tasks():
 
 
 def save_tasks():
-    """ذخیره‌ی تسک‌ها در فایل JSON"""
+    # Saving tasks in a JSON file
     with open(TASKS_FILE, "w", encoding="utf-8") as file:
         json.dump(tasks, file, indent=4)
 
 
 def add_task():
-    """افزودن تسک جدید با Date Picker"""
+    # Add a new task with Date Picker
     add_window = tk.Toplevel(root)
     add_window.title("Add Task")
     add_window.geometry("300x250")
@@ -56,7 +56,7 @@ def add_task():
         if title:
             is_done = True if status == "yes" else False
             tasks.append({"title": title, "done": is_done, "due_date": due_date})
-            save_tasks()  # 📥 ذخیره در فایل
+            save_tasks()  # Save to file
             messagebox.showinfo("Success", "Task added successfully!")
             add_window.destroy()
         else:
@@ -66,7 +66,7 @@ def add_task():
 
 
 def edit_task():
-    """ویرایش تسک با Date Picker"""
+    # Editing a task with Date Picker
     if not tasks:
         messagebox.showwarning("Error", "No tasks to edit!")
         return
@@ -107,7 +107,7 @@ def edit_task():
                 task["title"] = new_title
                 task["due_date"] = new_due_date
                 task["done"] = True if new_status == "yes" else False
-                save_tasks()  # 📥 ذخیره تغییرات
+                save_tasks()  # Save changes
                 messagebox.showinfo("Success", "Task updated successfully!")
                 edit_window.destroy()
             else:
@@ -120,7 +120,7 @@ def edit_task():
 
 
 def show_tasks():
-    """نمایش لیست تسک‌ها"""
+    # Show task list
     task_window = tk.Toplevel(root)
     task_window.title("Task List")
     task_window.geometry("400x300")
@@ -134,7 +134,7 @@ def show_tasks():
 
 
 def delete_task():
-    """حذف تسک"""
+    # Delete task
     if not tasks:
         messagebox.showwarning("Error", "No tasks to delete!")
         return
@@ -146,7 +146,7 @@ def delete_task():
 
         task_index = task_number - 1
         deleted_task = tasks.pop(task_index)
-        save_tasks()  # 📥 ذخیره تغییرات
+        save_tasks()  # Save changes
         messagebox.showinfo("Success", f"Deleted task: {deleted_task['title']}")
 
     except ValueError:
@@ -154,28 +154,28 @@ def delete_task():
 
 
 def exit_app():
-    """خروج از برنامه"""
+    # Exit the program
     root.quit()
 
 
-# 🖼️ تنظیمات اصلی پنجره
+# Main window settings
 root = tk.Tk()
 root.title("Task Manager")
 root.geometry("400x400")
 
-# 📥 **بارگذاری تسک‌های ذخیره‌شده هنگام اجرا**
+# Load saved tasks at runtime
 load_tasks()
 
-# 📌 منوی اصلی
+# Main menu
 menu_frame = tk.Frame(root)
 menu_frame.pack(pady=20)
 
-# 🔘 دکمه‌های منو
+# Menu buttons
 tk.Button(menu_frame, text="➕ Add Task", command=add_task, width=20).grid(row=0, column=0, padx=5, pady=5)
 tk.Button(menu_frame, text="📋 Show Tasks", command=show_tasks, width=20).grid(row=1, column=0, padx=5, pady=5)
 tk.Button(menu_frame, text="✏️ Edit Task", command=edit_task, width=20).grid(row=2, column=0, padx=5, pady=5)
 tk.Button(menu_frame, text="🗑 Delete Task", command=delete_task, width=20).grid(row=3, column=0, padx=5, pady=5)
 tk.Button(menu_frame, text="🚪 Exit", command=exit_app, width=20, bg="red", fg="white").grid(row=4, column=0, padx=5, pady=5)
 
-# 🚀 اجرای GUI
+# GUI implementation
 root.mainloop()
